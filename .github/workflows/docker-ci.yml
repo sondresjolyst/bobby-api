@@ -1,0 +1,21 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  prod:
+    uses: equinor/ops-actions/.github/workflows/docker.yml@bcbf7ce60f2ec6476892386608de9e62552ef974
+    secrets:
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    with:
+      environment: prod
+      registry: registry.hub.docker.com
+      username: sondresjo
+      repository: sondresjo/bobby-api
+      tag: ${{ github.ref_name }}
