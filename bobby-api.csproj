@@ -16,7 +16,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="images\" />
+	<Folder Include="images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<Content Include="images\**\*">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
   </ItemGroup>
 
 </Project>

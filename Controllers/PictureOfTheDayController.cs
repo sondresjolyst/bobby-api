@@ -30,7 +30,14 @@ public class PictureOfTheDayController : ControllerBase
         var contentType = GetContentType(filePath);
 
         var fileBytes = System.IO.File.ReadAllBytes(filePath);
-        return File(fileBytes, contentType);
+        var base64String = Convert.ToBase64String(fileBytes);
+
+        return Ok(new
+        {
+            FileName = Path.GetFileName(filePath),
+            ContentType = contentType,
+            Base64 = base64String
+        });
     }
 
     private static string GetContentType(string path)
