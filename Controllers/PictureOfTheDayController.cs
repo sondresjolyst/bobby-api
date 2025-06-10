@@ -6,7 +6,7 @@ namespace bobby_api.Controllers;
 [Route("[controller]")]
 public class PictureOfTheDayController : ControllerBase
 {
-    private readonly string _imagesFolder = Path.Combine("images");
+    private readonly string _imagesFolder = "images";
 
     [HttpGet]
     public IActionResult Get()

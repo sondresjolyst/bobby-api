@@ -6,8 +6,8 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-string? apiUsername = Environment.GetEnvironmentVariable("API_USERNAME");
-string? apiPassword = Environment.GetEnvironmentVariable("API_PASSWORD");
+string? apiUsername = builder.Configuration["API_USERNAME"];
+string? apiPassword = builder.Configuration["API_PASSWORD"];
 
 if (string.IsNullOrWhiteSpace(apiUsername) || string.IsNullOrWhiteSpace(apiPassword))
 {
