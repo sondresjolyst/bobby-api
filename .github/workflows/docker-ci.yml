@@ -11,7 +11,7 @@ on:
 jobs:
   prod:
     if: startsWith(github.ref, 'refs/tags/')  
-    uses: equinor/ops-actions/.github/workflows/docker.yml@beabcb741a47550f8d58d3be1fca08408e564288
+    uses: equinor/ops-actions/.github/workflows/docker.yml@718dda01e37c85a1c58bec19e73cbe0beef9485b
     secrets:
         password: ${{ secrets.DOCKER_PASSWORD }}
     with:
