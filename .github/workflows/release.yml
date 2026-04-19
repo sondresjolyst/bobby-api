@@ -16,6 +16,6 @@ jobs:
       pull-requests: write # Required to create release PRs
       issues: write # Required to create issues
     steps:
-      - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071
         with:
           release-type: simple
