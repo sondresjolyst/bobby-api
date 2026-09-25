@@ -3,6 +3,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -16,7 +17,8 @@ if (string.IsNullOrWhiteSpace(apiUsername) || string.IsNullOrWhiteSpace(apiPassw
 
 app.Use(async (context, next) =>
 {
-    if (context.Request.Path.StartsWithSegments("/swagger"))
+    if (context.Request.Path.StartsWithSegments("/swagger")
+        || context.Request.Path.Equals("/health", StringComparison.OrdinalIgnoreCase))
     {
         await next();
         return;
@@ -50,7 +52,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Probes reach the pod over plain HTTP and send no X-Forwarded-Proto, so a redirect
+// would fail them if an HTTPS port is ever configured.
+app.UseWhen(
+    context => !context.Request.Path.StartsWithSegments("/health"),
+    branch => branch.UseHttpsRedirection());
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthChecks("/health").AllowAnonymous();
 app.Run();
