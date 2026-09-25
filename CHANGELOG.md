@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/sondresjolyst/bobby-api/compare/v1.0.1...v1.0.2) (2026-09-25)
+
+
+### Bug Fixes
+
+* run the image as app and add a health endpoint ([#60](https://github.com/sondresjolyst/bobby-api/issues/60)) ([7d84774](https://github.com/sondresjolyst/bobby-api/commit/7d847747471533025ec773b6fbc68f236eefa638))
+
 ## [1.0.1](https://github.com/sondresjolyst/bobby-api/compare/v1.0.0...v1.0.1) (2026-04-27)
 
 
