@@ -1,71 +1,59 @@
-# Bobby API
+# bobby-api
 
-Bobby API serves a "picture of the day" by rotating through images in a folder. The same image is returned for a given UTC day, cycling through all available images.
+Serves a picture of the day. The same image is returned for a given UTC day,
+cycling through the files in `images/`.
 
-## Features
+## Stack
 
-- Returns a base64-encoded image, its filename, and content type.
-- Rotates the image daily based on the current UTC day of the year.
-- Supports `.jpg`, `.jpeg`, and `.png` images.
-- Simple HTTP Basic Authentication using environment variables or user secrets.
+ASP.NET Core on .NET 8.
 
-## How Image Selection Works
+## Quick start
 
-1. The API lists all images in the `images` folder.
-2. It calculates the current day of the year (UTC).
-3. Selects an image using:  
-   `index = dayOfYear % number_of_images`
+```bash
+dotnet restore
+API_USERNAME=someone API_PASSWORD=secret dotnet run
+```
 
-**Example Calculation:**
+Both variables are required. The process refuses to start without them.
 
-| dayOfYear | number_of_images | index |
-|-----------|------------------|-------|
-| 15        | 10               | 5     |
-| 16        | 10               | 6     |
-| 17        | 10               | 7     |
+## Environment
 
-## Getting Started
+| Variable | Used for |
+| --- | --- |
+| `API_USERNAME`, `API_PASSWORD` | Basic auth, checked on every request |
 
-### Prerequisites
+## Endpoints
 
-- [.NET 8 SDK](https://dotnet.microsoft.com/download)
-- [Docker](https://docs.docker.com/get-started/) (optional, for containerization)
+| Path | Auth |
+| --- | --- |
+| `/api/pictureoftheday` | Basic |
+| `/health` | Anonymous |
+| `/swagger` | Anonymous, and only mapped outside production |
 
-### Setup
+Every other path requires Basic auth.
 
-1. **Add Images**
+## Health
 
-   Place your images in the `images` folder at the project root. Supported formats: `.jpg`, `.jpeg`, `.png`.
+`/health` reports that the process is up, with no dependency checks. It is
+exempt from the Basic auth middleware by exact path match, so `/health/anything`
+still requires credentials.
 
-2. **Set Authentication Secrets**
+## Deployment
 
-   Set the following environment variables or [user secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets):
+Image [`sondresjo/bobby-api`](https://hub.docker.com/r/sondresjo/bobby-api) on
+Docker Hub, chart `bobby-api` in
+[tumogroup-charts](https://github.com/sondresjolyst/tumogroup-charts), applied by
+Flux from [tumo-flux](https://github.com/sondresjolyst/tumo-flux) to
+`bobby-prod`.
 
-   - `API_USERNAME`
-   - `API_PASSWORD`
+The container runs as the non-root `app` user. The chart pins `tag: latest`, and
+the build only runs on a pushed tag, so a release-please release does not by
+itself publish an image.
 
-3. **Run the API**
+Cluster secrets are created by
+[`scripts/bobby/bootstrap.sh`](https://github.com/sondresjolyst/tumo-platform/blob/main/scripts/bobby/bootstrap.sh)
+in [tumo-platform](https://github.com/sondresjolyst/tumo-platform).
 
-   You can run the API using the .NET CLI:
-   ```bash
-   dotnet run
-   ```
-   Or if you prefer Docker:
-   ```bash
-   docker build -t bobby-api .
-   docker run -p 7297:7297 -t bobby-api -e API_USERNAME=<username> -e API_PASSWORD=<password>
-   ```
+## License
 
-4. **Access the API**
-   Open your browser or use a tool like `curl` to access the API:
-   ```
-   http://localhost:7297/PictureOfTheDay
-   ```
-   You will need to provide the username and password set in the environment variables for authentication.
-
-## Environment Variables
-
-| Name         | Description                | Required |
-|--------------|---------------------------|----------|
-| API_USERNAME | Username for authentication| Yes      |
-| API_PASSWORD | Password for authentication| Yes      |
+Proprietary. Copyright (c) 2026 Sondre Sjølyst.
