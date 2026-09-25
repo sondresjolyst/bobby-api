@@ -18,7 +18,7 @@ if (string.IsNullOrWhiteSpace(apiUsername) || string.IsNullOrWhiteSpace(apiPassw
 app.Use(async (context, next) =>
 {
     if (context.Request.Path.StartsWithSegments("/swagger")
-        || context.Request.Path.StartsWithSegments("/health"))
+        || context.Request.Path.Equals("/health", StringComparison.OrdinalIgnoreCase))
     {
         await next();
         return;
