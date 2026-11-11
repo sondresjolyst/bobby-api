@@ -6,7 +6,7 @@ WORKDIR /app
 EXPOSE 7297
 
 # This stage is used to build the service project
-FROM mcr.microsoft.com/dotnet/sdk:8.0@sha256:341aa6e8bbaceb1194732328ca27c15bfa9c531687db83a66af3c0c1833f5534 AS build
+FROM mcr.microsoft.com/dotnet/sdk:11.0@sha256:65f3c7c6a25a239ab3e6719f2896147e7b68242ff2d8818dd70498bde6ef8bea AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["bobby-api.csproj", "."]
