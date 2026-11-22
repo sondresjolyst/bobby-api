@@ -34,8 +34,7 @@ app.Use(async (context, next) =>
             var decodedUsernamePassword = System.Text.Encoding.UTF8.GetString(decodedBytes, 0, bytesWritten);
             var parts = decodedUsernamePassword.Split(':', 2);
             if (parts.Length == 2
-                && FixedTimeEquals(parts[0], apiUsername)
-                && FixedTimeEquals(parts[1], apiPassword))
+                && (FixedTimeEquals(parts[0], apiUsername) & FixedTimeEquals(parts[1], apiPassword)))
             {
                 await next();
                 return;
