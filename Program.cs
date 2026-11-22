@@ -24,19 +24,22 @@ app.Use(async (context, next) =>
         return;
     }
 
-    string authHeader = context.Request.Headers.Authorization;
+    string? authHeader = context.Request.Headers.Authorization;
     if (authHeader != null && authHeader.StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
     {
         var encodedUsernamePassword = authHeader["Basic ".Length..].Trim();
-        var decodedUsernamePassword = System.Text.Encoding.UTF8.GetString(Convert.FromBase64String(encodedUsernamePassword));
-        var parts = decodedUsernamePassword.Split(':', 2);
-        var username = parts[0];
-        var password = parts.Length > 1 ? parts[1] : "";
-
-        if (username == apiUsername && password == apiPassword)
+        var decodedBytes = new byte[encodedUsernamePassword.Length];
+        if (Convert.TryFromBase64String(encodedUsernamePassword, decodedBytes, out var bytesWritten))
         {
-            await next();
-            return;
+            var decodedUsernamePassword = System.Text.Encoding.UTF8.GetString(decodedBytes, 0, bytesWritten);
+            var parts = decodedUsernamePassword.Split(':', 2);
+            if (parts.Length == 2
+                && FixedTimeEquals(parts[0], apiUsername)
+                && FixedTimeEquals(parts[1], apiPassword))
+            {
+                await next();
+                return;
+            }
         }
     }
 
@@ -61,3 +64,8 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHealthChecks("/health").AllowAnonymous();
 app.Run();
+
+static bool FixedTimeEquals(string a, string b) =>
+    System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(
+        System.Text.Encoding.UTF8.GetBytes(a),
+        System.Text.Encoding.UTF8.GetBytes(b));
