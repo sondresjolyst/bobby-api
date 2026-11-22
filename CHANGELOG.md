@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/sondresjolyst/bobby-api/compare/v1.0.2...v1.0.3) (2026-11-22)
+
+
+### Bug Fixes
+
+* **auth:** return 401 for malformed basic auth headers ([#80](https://github.com/sondresjolyst/bobby-api/issues/80)) ([677c4fa](https://github.com/sondresjolyst/bobby-api/commit/677c4fa565be5834561d301ed01eb25acce3f018))
+
 ## [1.0.2](https://github.com/sondresjolyst/bobby-api/compare/v1.0.1...v1.0.2) (2026-09-25)
 
 
